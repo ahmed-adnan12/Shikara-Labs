@@ -1,155 +1,218 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Header() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [logoClicked, setLogoClicked] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'need', 'objectives', 'benefits', 'contact'];
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const element = document.getElementById(sections[i]);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150) {
+            setActiveSection(sections[i]);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    setActiveSection(sectionId);
+  };
+
+  const handleLogoClick = () => {
+    setShowWelcome(true);
+    setLogoClicked(true);
+    setTimeout(() => {
+      scrollToSection('home');
+      setShowWelcome(false);
+      setLogoClicked(false);
+    }, 4000);
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 py-6 px-[70px]" style={{ fontFamily: "'Poppins', 'Inter', 'Segoe UI', sans-serif" }}>
-      <div className="flex justify-between items-center w-full gap-16">
-        {/* Logo Section */}
-        <div 
-          className="flex items-center gap-4 group cursor-pointer transition-all duration-300"
-          onClick={() => {
-            setIsClicked(true);
-            scrollToSection('home');
-            setTimeout(() => setIsClicked(false), 4000);
-          }}
-        >
-          <div className={`relative w-12 h-12 transition-all duration-300 group-hover:scale-125 ${isClicked ? 'animate-logo-click' : ''}`}>
-            <div className={`absolute inset-0 bg-gradient-to-r from-cyan-500 to-green-400 rounded opacity-75 blur-sm group-hover:opacity-100 transition-opacity duration-300 group-hover:blur-lg ${isClicked ? 'animate-logo-glow' : ''}`}></div>
-            <div className={`relative w-full h-full bg-black rounded flex items-center justify-center border border-cyan-500/30 group-hover:border-pink-500/60 transition-colors duration-300 ${isClicked ? 'animate-logo-border' : ''}`}>
-              <span className={`text-2xl font-black bg-gradient-to-r from-cyan-400 to-green-400 group-hover:from-pink-400 group-hover:to-pink-400 bg-clip-text text-transparent transition-all duration-300 ${isClicked ? 'animate-s-letter' : ''}`}>S</span>
+    <>
+      <nav className="fixed top-0 left-0 w-full z-50 py-6 px-[70px]" style={{ fontFamily: "'Poppins', 'Inter', 'Segoe UI', sans-serif" }}>
+        <div className="flex justify-between items-center w-full gap-16">
+          {/* Logo Section */}
+          <div 
+            className="flex items-center gap-4 group cursor-pointer transition-all duration-300"
+            onClick={handleLogoClick}
+          >
+            <div className="relative w-12 h-12">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-green-400 rounded opacity-75 blur-sm group-hover:opacity-100 transition-opacity duration-300 group-hover:blur-lg"></div>
+              <div className="relative w-full h-full bg-black rounded flex items-center justify-center border border-cyan-500/30 group-hover:border-pink-500/60 transition-colors duration-300">
+                <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 to-green-400 group-hover:from-pink-400 group-hover:to-pink-400 bg-clip-text text-transparent transition-all duration-300">S</span>
+              </div>
             </div>
+            
+            <span 
+              className="text-4xl font-black transition-all duration-400 group-hover:scale-110 group-hover:-translate-y-2 group-hover:drop-shadow-lg"
+              style={{
+                background: 'linear-gradient(90deg, #00d4ff 0%, #00ff88 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 15px rgba(0, 212, 255, 0.4))',
+                letterSpacing: '1px'
+              }}
+            >
+              SHIKARA LAB
+            </span>
           </div>
-          
-          <span 
-            className={`text-4xl font-black transition-all duration-400 group-hover:scale-110 group-hover:-translate-y-2 group-hover:drop-shadow-lg ${isClicked ? 'animate-shine-click' : ''}`}
+
+          {/* Nav Links & Button */}
+          <div className="flex items-center gap-8 justify-center flex-1">
+            {/* Nav Links Container */}
+            <ul className="flex gap-8 list-none">
+              <li>
+                <button 
+                  onClick={() => scrollToSection('home')} 
+                  className={`nav-link-item ${activeSection === 'home' ? 'active' : ''}`}
+                >
+                  Home
+                </button>
+              </li>
+
+              <li>
+                <button 
+                  onClick={() => scrollToSection('need')} 
+                  className={`nav-link-item ${activeSection === 'need' ? 'active' : ''}`}
+                >
+                  Need
+                </button>
+              </li>
+
+              <li>
+                <button 
+                  onClick={() => scrollToSection('objectives')} 
+                  className={`nav-link-item ${activeSection === 'objectives' ? 'active' : ''}`}
+                >
+                  Objectives
+                </button>
+              </li>
+
+              <li>
+                <button 
+                  onClick={() => scrollToSection('benefits')} 
+                  className={`nav-link-item ${activeSection === 'benefits' ? 'active' : ''}`}
+                >
+                  Benefits
+                </button>
+              </li>
+
+              <li>
+                <button 
+                  onClick={() => scrollToSection('contact')} 
+                  className={`nav-link-item ${activeSection === 'contact' ? 'active' : ''}`}
+                >
+                  Contact
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Get Started Button */}
+          <button
+            className="px-10 py-3 font-black text-sm rounded-xl transition-all duration-300 cursor-pointer relative overflow-hidden group uppercase tracking-wide"
             style={{
-              background: 'linear-gradient(90deg, #00d4ff 0%, #00ff88 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 15px rgba(0, 212, 255, 0.4))',
-              letterSpacing: '1px'
+              background: 'linear-gradient(135deg, #00d4ff 0%, #00ff88 100%)',
+              boxShadow: '0 8px 25px rgba(0, 212, 255, 0.3)',
+              color: '#000',
+              border: 'none'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 12px 35px rgba(0, 255, 136, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 212, 255, 0.3)';
             }}
           >
-            SHIKARA LAB
-          </span>
+            <span className="relative z-10">Get Started</span>
+            <span className="absolute inset-0 bg-white/20 transition-all duration-500 -left-full group-hover:left-full"></span>
+          </button>
         </div>
+      </nav>
 
-        {/* Nav Links & Button */}
-        <div className="flex items-center gap-8 justify-center flex-1">
-          {/* Nav Links Container */}
-          <ul className="flex gap-8 list-none">
-            <li>
-              <button 
-                onClick={() => scrollToSection('home')} 
-                className="nav-link-item"
-              >
-                Home
-              </button>
-            </li>
+      {/* Welcome Popup */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none overflow-hidden">
+          {/* Animated Background */}
+          <div className="absolute inset-0 bg-black pointer-events-auto" style={{
+            background: `linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(20, 0, 40, 0.98) 50%, rgba(0, 40, 20, 0.95) 100%),
+                        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.2) 0%, transparent 50%)`
+          }}>
+            {/* Floating Particles */}
+            <div className="absolute top-20 left-10 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl animate-float-1"></div>
+            <div className="absolute top-40 right-20 w-56 h-56 bg-pink-500/15 rounded-full blur-3xl animate-float-2"></div>
+            <div className="absolute bottom-20 left-1/3 w-48 h-48 bg-green-400/15 rounded-full blur-3xl animate-float-3"></div>
+            <div className="absolute top-1/2 right-1/4 w-36 h-36 bg-blue-500/15 rounded-full blur-3xl animate-float-4"></div>
+            
+            {/* Animated Grid Lines */}
+            <div className="absolute inset-0 opacity-20" style={{
+              backgroundImage: `
+                linear-gradient(0deg, transparent 24%, rgba(0, 212, 255, 0.1) 25%, rgba(0, 212, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 212, 255, 0.1) 75%, rgba(0, 212, 255, 0.1) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 212, 255, 0.1) 25%, rgba(0, 212, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 212, 255, 0.1) 75%, rgba(0, 212, 255, 0.1) 76%, transparent 77%, transparent)
+              `,
+              backgroundSize: '50px 50px',
+              animation: 'grid-move 20s linear infinite'
+            }}></div>
 
-            <li
-              className="relative group"
-              onMouseEnter={() => setDropdownOpen(true)}
-              onMouseLeave={() => setDropdownOpen(false)}
+            {/* Radial Pulse */}
+            <div className="absolute inset-0 animate-pulse-radial" style={{
+              background: 'radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%)'
+            }}></div>
+          </div>
+
+          {/* Content */}
+          <div className="relative text-center">
+            <h1 
+              className="text-6xl md:text-7xl font-black tracking-wider animate-welcome-text"
+              style={{
+                background: 'linear-gradient(90deg, #00d4ff 0%, #ff1493 50%, #00ff88 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 30px rgba(0, 212, 255, 0.6))',
+                letterSpacing: '3px'
+              }}
             >
-              <button className="nav-link-item flex items-center gap-3">
-                Virtual Labs
-                <span className={`text-lg transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} style={{color: '#00ff88', marginLeft: '6px'}}>
-                  ▼
-                </span>
-              </button>
-              
-              {/* Dropdown Menu */}
-              <ul
-                className={`absolute top-full left-0 min-w-56 mt-3 rounded-xl py-3 px-2 transition-all duration-300 ${
-                  dropdownOpen
-                    ? 'opacity-100 visible translate-y-0 scale-100'
-                    : 'opacity-0 invisible -translate-y-3 scale-95'
-                }`}
-                style={{
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(0, 212, 255, 0.25)',
-                  boxShadow: '0 15px 40px rgba(0, 212, 255, 0.12)',
-                }}
-              >
-                <li><button className="dropdown-item">Physics Lab</button></li>
-                <li><button className="dropdown-item">Chemistry Lab</button></li>
-                <li><button className="dropdown-item">Biology Lab</button></li>
-              </ul>
-            </li>
-
-            <li>
-              <button 
-                onClick={() => scrollToSection('need')} 
-                className="nav-link-item"
-              >
-                Need
-              </button>
-            </li>
-
-            <li>
-              <button 
-                onClick={() => scrollToSection('objectives')} 
-                className="nav-link-item"
-              >
-                Objectives
-              </button>
-            </li>
-
-            <li>
-              <button 
-                onClick={() => scrollToSection('benefits')} 
-                className="nav-link-item"
-              >
-                Benefits
-              </button>
-            </li>
-
-            <li>
-              <button 
-                onClick={() => scrollToSection('contact')} 
-                className="nav-link-item"
-              >
-                Contact
-              </button>
-            </li>
-          </ul>
+              WELCOME TO
+            </h1>
+            <h2 
+              className="text-7xl md:text-8xl font-black tracking-wider animate-welcome-text-delay"
+              style={{
+                background: 'linear-gradient(90deg, #00ff88 0%, #00d4ff 50%, #ff1493 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 40px rgba(0, 255, 136, 0.8))',
+                letterSpacing: '3px',
+                marginTop: '10px'
+              }}
+            >
+              SHIKARA LAB
+            </h2>
+          </div>
         </div>
-
-        {/* Get Started Button */}
-        <button
-          className="px-10 py-3 font-black text-sm rounded-xl transition-all duration-300 cursor-pointer relative overflow-hidden group uppercase tracking-wide"
-          style={{
-            background: 'linear-gradient(135deg, #00d4ff 0%, #00ff88 100%)',
-            boxShadow: '0 8px 25px rgba(0, 212, 255, 0.3)',
-            color: '#000',
-            border: 'none'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-4px)';
-            e.currentTarget.style.boxShadow = '0 12px 35px rgba(0, 255, 136, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 212, 255, 0.3)';
-          }}
-        >
-          <span className="relative z-10">Get Started</span>
-          <span className="absolute inset-0 bg-white/20 transition-all duration-500 -left-full group-hover:left-full"></span>
-        </button>
-      </div>
+      )}
 
       <style>{`
         .nav-link-item {
@@ -192,252 +255,182 @@ export default function Header() {
           transform-origin: left;
         }
 
-        .dropdown-item {
-          display: block;
-          padding: 12px 16px;
-          color: #cbd5e1;
-          text-decoration: none;
-          font-size: 13px;
-          font-weight: 500;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          position: relative;
-          margin-bottom: 4px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          width: 100%;
-          text-align: left;
+        .nav-link-item.active {
+          color: #ff1493;
+          font-size: 20px;
+          font-weight: 900;
+          transform: scale(1.1);
         }
 
-        .dropdown-item:hover {
-          background: rgba(0, 212, 255, 0.15);
-          color: #00ff88;
-          padding-left: 20px;
-          transform: translateX(4px);
+        .nav-link-item.active::after {
+          transform: scaleX(1);
+          transform-origin: left;
         }
 
-        @keyframes animate-pulse-click {
-          0%, 100% { transform: scale(1); }
-          25% { transform: scale(1.3); }
-          50% { transform: scale(0.9); }
-          75% { transform: scale(1.2); }
-        }
-
-        @keyframes animate-glow-click {
-          0%, 100% { filter: blur(2px); opacity: 0.75; }
-          50% { filter: blur(8px); opacity: 1; }
-        }
-
-        @keyframes animate-spin-click {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-
-        @keyframes animate-bounce-click {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.5); }
-        }
-
-        @keyframes animate-shine-click {
-          0%, 100% { 
-            filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.4));
-            transform: scale(1);
-          }
-          25% { 
-            filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.8));
-            transform: scale(1.15);
-          }
-          50% { 
-            filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.8));
-            transform: scale(1.05);
-          }
-          75% { 
-            filter: drop-shadow(0 0 35px rgba(255, 105, 180, 0.8));
-            transform: scale(1.1);
-          }
-        }
-
-        .animate-pulse-click {
-          animation: animate-pulse-click 0.6s ease-in-out 4;
-        }
-
-        .animate-glow-click {
-          animation: animate-glow-click 0.6s ease-in-out 4;
-        }
-
-        .animate-spin-click {
-          animation: animate-spin-click 0.8s ease-in-out 2;
-        }
-
-        .animate-bounce-click {
-          animation: animate-bounce-click 0.5s ease-in-out 3;
-        }
-
-        .animate-shine-click {
-          animation: animate-shine-click 3.5s ease-in-out 1;
-        }
-
-        @keyframes hypnotic-glow {
+        @keyframes welcome-slow-motion {
           0% {
-            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.6)) drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
-            transform: scale(1) skewY(0deg);
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
-          }
-          15% {
-            filter: drop-shadow(0 0 25px rgba(255, 20, 147, 0.8)) drop-shadow(0 0 40px rgba(255, 20, 147, 0.5));
-            transform: scale(1.08) skewY(-1deg);
-            text-shadow: 0 0 20px rgba(255, 20, 147, 1), 0 0 40px rgba(255, 20, 147, 0.6);
+            opacity: 0;
+            transform: scale(0.5) translateY(20px);
+            filter: blur(10px);
           }
           30% {
-            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.8)) drop-shadow(0 0 50px rgba(0, 255, 136, 0.5));
-            transform: scale(1.05) skewY(1deg);
-            text-shadow: 0 0 25px rgba(0, 255, 136, 1), 0 0 50px rgba(0, 255, 136, 0.6);
-          }
-          45% {
-            filter: drop-shadow(0 0 35px rgba(100, 200, 255, 0.9)) drop-shadow(0 0 60px rgba(100, 200, 255, 0.5));
-            transform: scale(1.1) skewY(-1.5deg);
-            text-shadow: 0 0 30px rgba(100, 200, 255, 1), 0 0 60px rgba(100, 200, 255, 0.6);
+            opacity: 1;
+            transform: scale(1.05) translateY(-5px);
+            filter: blur(0px);
           }
           60% {
-            filter: drop-shadow(0 0 40px rgba(255, 105, 180, 0.9)) drop-shadow(0 0 70px rgba(255, 105, 180, 0.5));
-            transform: scale(1.07) skewY(1.5deg);
-            text-shadow: 0 0 35px rgba(255, 105, 180, 1), 0 0 70px rgba(255, 105, 180, 0.6);
+            opacity: 1;
+            transform: scale(1) translateY(0px);
+            filter: blur(0px);
           }
-          75% {
-            filter: drop-shadow(0 0 45px rgba(0, 255, 200, 0.9)) drop-shadow(0 0 80px rgba(0, 255, 200, 0.5));
-            transform: scale(1.12) skewY(-2deg);
-            text-shadow: 0 0 40px rgba(0, 255, 200, 1), 0 0 80px rgba(0, 255, 200, 0.6);
-          }
-          90% {
-            filter: drop-shadow(0 0 50px rgba(255, 0, 127, 1)) drop-shadow(0 0 90px rgba(255, 0, 127, 0.6));
-            transform: scale(1.15) skewY(2deg);
-            text-shadow: 0 0 50px rgba(255, 0, 127, 1), 0 0 90px rgba(255, 0, 127, 0.7);
+          70% {
+            opacity: 1;
+            transform: scale(1) translateY(0px);
+            filter: blur(0px);
           }
           100% {
-            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.6)) drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
-            transform: scale(1) skewY(0deg);
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            opacity: 0;
+            transform: scale(1.2) translateY(-30px);
+            filter: blur(15px);
           }
         }
 
-        .animate-shine-click {
-          animation: hypnotic-glow 4s cubic-bezier(0.36, 0, 0.66, 1) 1;
-        }
-
-        @keyframes logo-spin-glow {
+        @keyframes welcome-slow-motion-delay {
           0% {
-            transform: scale(1) rotate(0deg);
-            filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
-          }
-          15% {
-            transform: scale(1.2) rotate(45deg);
-            filter: drop-shadow(0 0 20px rgba(255, 20, 147, 0.8)) drop-shadow(0 0 40px rgba(255, 20, 147, 0.5));
-          }
-          30% {
-            transform: scale(1.3) rotate(90deg);
-            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.9)) drop-shadow(0 0 50px rgba(0, 255, 136, 0.6));
-          }
-          45% {
-            transform: scale(1.25) rotate(180deg);
-            filter: drop-shadow(0 0 35px rgba(100, 200, 255, 0.9)) drop-shadow(0 0 60px rgba(100, 200, 255, 0.6));
-          }
-          60% {
-            transform: scale(1.35) rotate(270deg);
-            filter: drop-shadow(0 0 40px rgba(255, 105, 180, 0.9)) drop-shadow(0 0 70px rgba(255, 105, 180, 0.6));
-          }
-          75% {
-            transform: scale(1.3) rotate(315deg);
-            filter: drop-shadow(0 0 45px rgba(0, 255, 200, 0.9)) drop-shadow(0 0 80px rgba(0, 255, 200, 0.6));
-          }
-          90% {
-            transform: scale(1.25) rotate(360deg);
-            filter: drop-shadow(0 0 50px rgba(255, 0, 127, 1)) drop-shadow(0 0 90px rgba(255, 0, 127, 0.7));
-          }
-          100% {
-            transform: scale(1) rotate(360deg);
-            filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
-          }
-        }
-
-        @keyframes letter-pulse-glow {
-          0% {
-            transform: scale(1);
-            filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.8));
-          }
-          20% {
-            transform: scale(1.4);
-            filter: drop-shadow(0 0 25px rgba(255, 20, 147, 1)) drop-shadow(0 0 50px rgba(255, 20, 147, 0.8));
+            opacity: 0;
+            transform: scale(0.3) translateY(40px);
+            filter: blur(15px);
           }
           40% {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 1)) drop-shadow(0 0 60px rgba(0, 255, 136, 0.8));
+            opacity: 0;
+            transform: scale(0.3) translateY(40px);
+            filter: blur(15px);
           }
-          60% {
-            transform: scale(1.5);
-            filter: drop-shadow(0 0 35px rgba(100, 200, 255, 1)) drop-shadow(0 0 70px rgba(100, 200, 255, 0.8));
+          70% {
+            opacity: 1;
+            transform: scale(1.05) translateY(-5px);
+            filter: blur(0px);
           }
-          80% {
-            transform: scale(1.3);
-            filter: drop-shadow(0 0 40px rgba(255, 105, 180, 1)) drop-shadow(0 0 80px rgba(255, 105, 180, 0.8));
+          85% {
+            opacity: 1;
+            transform: scale(1) translateY(0px);
+            filter: blur(0px);
           }
           100% {
-            transform: scale(1);
-            filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.8));
+            opacity: 0;
+            transform: scale(1.3) translateY(-40px);
+            filter: blur(20px);
           }
         }
 
-        @keyframes border-glow-pulse {
-          0% {
-            border-color: rgba(0, 212, 255, 0.5);
-            box-shadow: 0 0 5px rgba(0, 212, 255, 0.3) inset;
+        .animate-welcome-text {
+          animation: welcome-slow-motion 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .animate-welcome-text-delay {
+          animation: welcome-slow-motion-delay 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes float-1 {
+          0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.3;
           }
           25% {
-            border-color: rgba(255, 20, 147, 1);
-            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6) inset, 0 0 30px rgba(255, 20, 147, 0.4);
+            transform: translate(30px, -30px);
+            opacity: 0.5;
           }
           50% {
-            border-color: rgba(0, 255, 136, 1);
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.6) inset, 0 0 40px rgba(0, 255, 136, 0.4);
+            transform: translate(-20px, 20px);
+            opacity: 0.3;
           }
           75% {
-            border-color: rgba(100, 200, 255, 1);
-            box-shadow: 0 0 30px rgba(100, 200, 255, 0.6) inset, 0 0 50px rgba(100, 200, 255, 0.4);
-          }
-          100% {
-            border-color: rgba(0, 212, 255, 0.5);
-            box-shadow: 0 0 5px rgba(0, 212, 255, 0.3) inset;
+            transform: translate(40px, 10px);
+            opacity: 0.4;
           }
         }
 
-        @keyframes glow-background {
-          0% {
-            filter: blur(2px) brightness(1);
+        @keyframes float-2 {
+          0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.2;
+          }
+          33% {
+            transform: translate(-40px, 30px);
+            opacity: 0.4;
+          }
+          66% {
+            transform: translate(20px, -25px);
+            opacity: 0.3;
+          }
+        }
+
+        @keyframes float-3 {
+          0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.25;
+          }
+          40% {
+            transform: translate(35px, -20px);
+            opacity: 0.45;
+          }
+          80% {
+            transform: translate(-30px, 25px);
+            opacity: 0.2;
+          }
+        }
+
+        @keyframes float-4 {
+          0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.2;
           }
           50% {
-            filter: blur(15px) brightness(1.3);
+            transform: translate(-25px, -35px);
+            opacity: 0.4;
+          }
+        }
+
+        @keyframes grid-move {
+          0% {
+            transform: translateY(0);
           }
           100% {
-            filter: blur(2px) brightness(1);
+            transform: translateY(50px);
           }
         }
 
-        .animate-logo-click {
-          animation: logo-spin-glow 4s cubic-bezier(0.36, 0, 0.66, 1) 1;
+        @keyframes pulse-radial {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 0.6;
+          }
         }
 
-        .animate-logo-glow {
-          animation: glow-background 4s cubic-bezier(0.36, 0, 0.66, 1) 1;
+        .animate-float-1 {
+          animation: float-1 8s ease-in-out infinite;
         }
 
-        .animate-logo-border {
-          animation: border-glow-pulse 4s cubic-bezier(0.36, 0, 0.66, 1) 1;
+        .animate-float-2 {
+          animation: float-2 10s ease-in-out infinite;
         }
 
-        .animate-s-letter {
-          animation: letter-pulse-glow 4s cubic-bezier(0.36, 0, 0.66, 1) 1;
+        .animate-float-3 {
+          animation: float-3 12s ease-in-out infinite;
+        }
+
+        .animate-float-4 {
+          animation: float-4 9s ease-in-out infinite;
+        }
+
+        .animate-pulse-radial {
+          animation: pulse-radial 4s ease-in-out infinite;
         }
       `}</style>
-    </nav>
+    </>
   );
 }
