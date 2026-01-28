@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
-export default function PhysicsTopicsPage() {
+export default function ChemistryTopicsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [animateLoad, setAnimateLoad] = useState(false);
   const [hoveredId, setHoveredId] = useState(null);
@@ -16,12 +16,13 @@ export default function PhysicsTopicsPage() {
   };
 
   const experiments = [
-    { id: 1, title: "Equivalent resistance of two resistors (series & parallel)", color: 'from-cyan-400 to-blue-600', accent: 'cyan' },
-    { id: 2, title: "Laws of reflection of light using a plane mirror", color: 'from-amber-400 to-orange-600', accent: 'amber' },
-    { id: 3, title: "Image formation by Concave mirror", color: 'from-violet-400 to-purple-600', accent: 'violet' },
-    { id: 4, title: "Image formation by Convex lens", color: 'from-pink-400 to-rose-600', accent: 'pink' },
-    { id: 5, title: "Determination of focal length of Concave mirror", color: 'from-emerald-400 to-teal-600', accent: 'emerald' },
-    { id: 6, title: "Determination of focal length of Convex lens", color: 'from-red-400 to-red-600', accent: 'red' }
+    { id: 1, title: "Identification of acids, bases, and salts using indicators", color: 'from-cyan-400 to-blue-600', accent: 'cyan' },
+    { id: 2, title: "Reactivity of metals (Zn, Fe, Cu) with salt solutions", color: 'from-amber-400 to-orange-600', accent: 'amber' },
+    { id: 3, title: "Types of chemical reactions: Combination", color: 'from-violet-400 to-purple-600', accent: 'violet' },
+    { id: 4, title: "Types of chemical reactions: Displacement", color: 'from-pink-400 to-rose-600', accent: 'pink' },
+    { id: 5, title: "Types of chemical reactions: Double displacement", color: 'from-emerald-400 to-teal-600', accent: 'emerald' },
+    { id: 6, title: "pH determination using pH paper / universal indicator", color: 'from-red-400 to-red-600', accent: 'red' },
+    { id: 7, title: "Cleansing action of soap in soft and hard water", color: 'from-lime-400 to-green-600', accent: 'lime' }
   ];
 
   const filteredExperiments = experiments.filter(exp =>
@@ -74,16 +75,16 @@ export default function PhysicsTopicsPage() {
             <div className="relative z-10">
               <div className="inline-block mb-4">
                 <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-500 text-black backdrop-blur-xl border border-cyan-400/50 shadow-lg shadow-cyan-500/50 inline-block">
-                   SECONDARY SCHOOL 
+                  ✦ SECONDARY SCHOOL LABORATORY
                 </span>
               </div>
               
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black mb-3 leading-tight">
-                <span className="block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-shift">Discover Physics Laws with Shikara Lab Experiments</span>
+                <span className="block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient-shift">Master Chemistry Through Interactive Experiments</span>
               </h1>
               
               <p className="text-sm md:text-base text-gray-400 max-w-2xl leading-relaxed font-light tracking-wide">
-               Transform theory into thrilling discoveries through immersive virtual labs. Build intuition, test hypotheses, and witness physics in action—anytime, anywhere.
+                Explore molecular reactions, chemical properties, and fundamental concepts through immersive virtual experiments. Discover the science behind everyday phenomena.
               </p>
             </div>
           </div>
