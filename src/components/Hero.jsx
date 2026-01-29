@@ -633,9 +633,9 @@ export default function Hero() {
                   onChange={(e) =>
                     setSignupData({ ...signupData, classLevel: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-lg text-sm text-white focus:outline-none"
+                  className="w-full px-4 py-3 rounded-lg text-sm text-black focus:outline-none"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.04)',
+                    background: 'rgb(255, 255, 255)',
                     border: '1px solid rgba(0, 212, 255, 0.2)',
                   }}
                 >

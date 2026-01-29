@@ -17,7 +17,7 @@ import EquivalentResistanceExperimentDetails from './ExperimentPages/Physics/Equ
 export default function App() {
   return (
     <div>
-      {/* <Home/> */}
+      <Home/>
       {/* <Series/> */}
       {/* <AcidBaseIndicatorLab/> */}
       {/* <ChemicalReactionsVirtualLab/> */}
@@ -26,10 +26,10 @@ export default function App() {
       {/* <PhysicsTopicsPage/> */}
       {/* <ChemistryTopicsPage/> */}
       {/* <BiologyTopicsPage/> */}
-        <FaradayDetails/>
+        {/* <FaradayDetails/>
         <OhmsExperimentDetails/>
         <EquivalentResistanceExperimentDetails/>
-    
+     */}
     </div>
   )
 }
