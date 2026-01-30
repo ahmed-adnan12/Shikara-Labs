@@ -11,13 +11,15 @@ import BiologyTopicsPage from './components/BiologyTopicPages'
 import FaradayDetails from './ExperimentPages/Physics/FaradayExperimentDetails'
 import OhmsExperimentDetails from './ExperimentPages/Physics/OhmsExperimentDetails'
 import EquivalentResistanceExperimentDetails from './ExperimentPages/Physics/EquivalentResistanceExperimentDetails'
+import PHDeterminationExperimentDetails from './ExperimentPages/Chemistry/PHDeterminationExperimentDetails'
+import ChemicalReactionsExperimentDetails from './ExperimentPages/Chemistry/ChemicalReactionsExperimentDetails'
 
 
 
 export default function App() {
   return (
     <div>
-      <Home/>
+      {/* <Home/> */}
       {/* <Series/> */}
       {/* <AcidBaseIndicatorLab/> */}
       {/* <ChemicalReactionsVirtualLab/> */}
@@ -28,8 +30,10 @@ export default function App() {
       {/* <BiologyTopicsPage/> */}
         {/* <FaradayDetails/>
         <OhmsExperimentDetails/>
-        <EquivalentResistanceExperimentDetails/>
-     */}
+        <EquivalentResistanceExperimentDetails/>*/}
+        {/* <PHDeterminationExperimentDetails/> */}
+        <ChemicalReactionsExperimentDetails/>
+
     </div>
   )
 }
