@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BookOpen, Eye, RefreshCw, Lightbulb, Shield, Beaker } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export default function ObjectivesSection() {
   const [activeCard, setActiveCard] = useState(null);
@@ -50,138 +49,54 @@ export default function ObjectivesSection() {
     }
   ];
 
-  useEffect(() => {
-    const createGlowOrbs = () => {
-      const orbContainer = document.getElementById('objectives-glow-orbs');
-      if (!orbContainer) return;
-      
-      orbContainer.innerHTML = '';
-      for (let i = 0; i < 25; i++) {
-        const orb = document.createElement('div');
-        const size = 100 + Math.random() * 200;
-        orb.style.position = 'absolute';
-        orb.style.width = size + 'px';
-        orb.style.height = size + 'px';
-        orb.style.borderRadius = '50%';
-        orb.style.filter = 'blur(40px)';
-        orb.style.opacity = String(0.04 + Math.random() * 0.08);
-        orb.style.left = Math.random() * 100 + '%';
-        orb.style.top = Math.random() * 100 + '%';
-        
-        const colors = [
-          'radial-gradient(circle, rgba(0,212,255,0.8), transparent 70%)',
-          'radial-gradient(circle, rgba(0,255,136,0.6), transparent 70%)',
-          'radial-gradient(circle, rgba(114,137,218,0.6), transparent 70%)',
-          'radial-gradient(circle, rgba(255,165,0,0.5), transparent 70%)'
-        ];
-        orb.style.background = colors[Math.floor(Math.random() * colors.length)];
-        orbContainer.appendChild(orb);
-      }
-    };
-
-    createGlowOrbs();
-  }, []);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.7, ease: "easeOut" }
-    }
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, x: -60 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
-  };
-
   return (
-    <section id="objectives" className="relative w-full min-h-screen py-20 overflow-hidden bg-black select-none">
-      {/* Background Elements */}
+    <section id="objectives" className="relative w-full min-h-screen py-16 md:py-24 lg:py-32 overflow-hidden bg-black">
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
         
-        {/* Glow orbs */}
-        <div id="objectives-glow-orbs" className="absolute inset-0" />
-        
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
+        <div className="absolute inset-0 opacity-[0.02]"
           style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
-            backgroundSize: '80px 80px'
+            backgroundImage: 'linear-gradient(rgba(0,212,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '100px 100px'
           }}
         />
+        
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-3xl opacity-20" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-green-500/10 rounded-full filter blur-3xl opacity-20" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full">
-        {/* Section Header */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          variants={headerVariants}
-          viewport={{ once: true, amount: 0.3 }}
-          className="text-center mb-16 px-6 sm:px-10 lg:px-16"
-        >
-          <h2
-            className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 leading-tight"
-            style={{
-              background: 'linear-gradient(90deg, #00d4ff 0%, #6ee7ff 25%, #7cffc6 50%, #00ff88 75%, #6ee7ff 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '-0.5px'
-            }}
-          >
-            Objectives of the Project
+      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-16">
+        
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-16 lg:mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-1 leading-tight">
+            <span className="bg-gradient-to-r from-cyan-400 via-green-400 to-cyan-400 bg-clip-text text-transparent">
+              Objectives of the Project
+            </span>
           </h2>
-
-          <p className="text-base sm:text-lg lg:text-xl text-gray-300 mt-6 max-w-3xl mx-auto font-medium leading-relaxed">
+          <p className="text-gray-400 text-sm md:text-base lg:text-lg max-w-2xl mx-auto">
             To support, not replace, real laboratories
           </p>
-        </motion.div>
+        </div>
 
         {/* Cards Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-6 sm:px-10 lg:px-16 w-full"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {objectives.map((objective, index) => {
             const Icon = objective.icon;
             const isActive = activeCard === index;
 
             return (
-              <motion.div
+              <div
                 key={index}
-                variants={cardVariants}
-                className="group relative h-full cursor-pointer"
-                style={{ overflow: 'hidden' }}
+                className="group relative h-full"
                 onMouseEnter={() => setActiveCard(index)}
                 onMouseLeave={() => setActiveCard(null)}
               >
+                {/* Card */}
                 <div
-                  className="relative p-8 sm:p-7 rounded-2xl h-full select-none"
+                  className="relative p-6 md:p-7 lg:p-8 rounded-2xl h-full transition-all duration-300 ease-out overflow-hidden backdrop-blur-md"
                   style={{
                     background: isActive
                       ? 'rgba(0, 212, 255, 0.08)'
@@ -189,17 +104,15 @@ export default function ObjectivesSection() {
                     border: isActive
                       ? `1.5px solid rgba(0, 212, 255, 0.4)`
                       : '1px solid rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(20px)',
                     boxShadow: isActive
-                      ? '0 20px 60px rgba(0, 212, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                      : '0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-                    transform: isActive ? 'translateY(-8px)' : 'translateY(0)',
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                      ? '0 8px 32px rgba(0, 212, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                      : '0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+                    transform: isActive ? 'translateY(-4px)' : 'translateY(0)',
                   }}
                 >
-                  {/* Gradient accent */}
+                  {/* Top accent line */}
                   <div
-                    className="absolute top-0 left-0 right-0 h-[1px] transition-opacity duration-500"
+                    className="absolute top-0 left-0 right-0 h-[1px] transition-opacity duration-300"
                     style={{
                       background: `linear-gradient(90deg, transparent, ${objective.color}80, transparent)`,
                       opacity: isActive ? 1 : 0
@@ -207,84 +120,62 @@ export default function ObjectivesSection() {
                   />
 
                   {/* Icon Container */}
-                  <div className="relative z-20 mb-6">
+                  <div className="mb-6">
                     <div
-                      className="p-3.5 rounded-xl"
+                      className="w-fit p-3 md:p-3.5 rounded-xl transition-all duration-300"
                       style={{
-                        background: isActive
-                          ? 'rgba(0, 212, 255, 0.15)'
-                          : 'rgba(255, 255, 255, 0.05)',
-                        border: `1.5px solid ${objective.color}30`,
+                        background: isActive ? `rgba(0, 212, 255, 0.12)` : `rgba(255, 255, 255, 0.04)`,
+                        border: `1.5px solid ${objective.color}25`,
                         boxShadow: isActive
-                          ? `0 0 20px ${objective.color}40, inset 0 0 10px ${objective.color}20`
-                          : `0 0 10px ${objective.color}20`,
-                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                          ? `0 0 16px ${objective.color}30, inset 0 0 8px ${objective.color}15`
+                          : `0 0 8px ${objective.color}15`
                       }}
                     >
-                      <Icon
-                        size={28}
-                        style={{
-                          color: objective.color,
-                          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                          transform: isActive ? 'scale(1.1)' : 'scale(1)'
-                        }}
-                        strokeWidth={1.5}
-                      />
+                      <Icon size={24} style={{ color: objective.color }} strokeWidth={1.5} />
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="relative z-20">
+                  <div>
                     <h3
-                      className="text-lg sm:text-xl font-black mb-2"
-                      style={{
-                        color: objective.color,
-                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-                      }}
+                      className="text-lg md:text-xl font-bold mb-2 md:mb-3 transition-colors duration-300"
+                      style={{ color: objective.color }}
                     >
                       {objective.title}
                     </h3>
 
-                    <p className="text-sm text-gray-400 leading-relaxed font-medium mb-5 transition-colors duration-400">
+                    <p className="text-xs md:text-sm text-gray-400 leading-relaxed mb-4 md:mb-5 font-medium">
                       {objective.description}
                     </p>
 
-                    {/* Benefit tag */}
+                    {/* Benefit Tag */}
                     <div
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300"
                       style={{
-                        background: `${objective.color}15`,
+                        background: `${objective.color}12`,
                         color: objective.color,
-                        border: `0.5px solid ${objective.color}40`,
-                        opacity: isActive ? 1 : 0.6,
-                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                        border: `0.5px solid ${objective.color}35`,
+                        opacity: isActive ? 1 : 0.7
                       }}
                     >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full"
-                        style={{
-                          background: objective.color,
-                          transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                          transform: isActive ? 'scale(1.2)' : 'scale(1)'
-                        }}
-                      />
+                      <span className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full" style={{ background: objective.color }} />
                       {objective.benefit}
                     </div>
                   </div>
 
-                  {/* Bottom gradient line */}
+                  {/* Bottom accent line */}
                   <div
-                    className="absolute bottom-0 left-0 right-0 h-[1px] transition-opacity duration-500"
+                    className="absolute bottom-0 left-0 right-0 h-[1px] transition-opacity duration-300"
                     style={{
                       background: `linear-gradient(90deg, transparent, ${objective.color}80, transparent)`,
                       opacity: isActive ? 1 : 0
                     }}
                   />
                 </div>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
