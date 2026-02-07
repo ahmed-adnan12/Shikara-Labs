@@ -3,11 +3,23 @@ import {
   Zap, Beaker, Microscope, ChevronRight, TrendingUp, 
   Calendar, BookOpen, Target, Sparkles, ArrowRight, Clock, CheckCircle, AlertCircle
 } from 'lucide-react';
+import { Link, redirect } from 'react-router-dom';
 
 export default function StudentDashboard() {
   const [currentSubject, setCurrentSubject] = useState('physics');
   const [showLabModal, setShowLabModal] = useState(false);
   const [animateLoad, setAnimateLoad] = useState(false);
+
+  let redirectTo = "";
+  if(currentSubject == "physics"){
+    redirectTo = "physics"
+  }else if(currentSubject=="chemistry"){
+    redirectTo="chemistry"
+  }else if(currentSubject=="biology"){
+    redirectTo="biology"
+  }else{
+    redirectTo="dashboard"
+  }
 
   useEffect(() => {
     setAnimateLoad(true);
@@ -84,7 +96,7 @@ export default function StudentDashboard() {
   const currentSubjectData = subjects.find(s => s.id === currentSubject);
 
   return (
-    <div className="min-h-screen w-full bg-black text-white overflow-hidden">
+    <div className="min-h-screen w-full bg-black text-white pt-16 overflow-hidden">
       {/* Animated gradient background */}
       <div className="fixed inset-0 pointer-events-none opacity-30">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-blob"></div>
@@ -267,12 +279,14 @@ export default function StudentDashboard() {
               </ul>
             </div>
 
-            <button
-              onClick={() => alert('Starting Lab...')}
+            <Link to={`/${redirectTo}`}>
+              <button
               className={`w-full py-3 rounded-xl font-bold text-black transition-all duration-300 transform hover:scale-105 bg-gradient-to-r ${currentSubjectData.color}`}
-            >
-              Start Lab Experiment
-            </button>
+              >
+                Start Lab Experiment
+              </button>
+            </Link>
+
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function PhysicsTopicsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,21 +17,14 @@ export default function PhysicsTopicsPage() {
   };
 
   const experiments = [
-    { id: 1, title: "Equivalent resistance of two resistors (series & parallel)", color: 'from-cyan-400 to-blue-600', accent: 'cyan' },
-    { id: 2, title: "Laws of reflection of light using a plane mirror", color: 'from-amber-400 to-orange-600', accent: 'amber' },
-    { id: 3, title: "Image formation by Concave mirror", color: 'from-violet-400 to-purple-600', accent: 'violet' },
-    { id: 4, title: "Image formation by Convex lens", color: 'from-pink-400 to-rose-600', accent: 'pink' },
-    { id: 5, title: "Determination of focal length of Concave mirror", color: 'from-emerald-400 to-teal-600', accent: 'emerald' },
-    { id: 6, title: "Determination of focal length of Convex lens", color: 'from-red-400 to-red-600', accent: 'red' }
+    { id: 1, title: "Verification of Faraday's Law", color: 'from-cyan-400 to-blue-600', accent: 'cyan' },
+    { id: 2, title: "Verification of Ohm's Law", color: 'from-amber-400 to-orange-600', accent: 'amber' },
+    { id: 3, title: "Determination of Equivalent Resistance of Two Resistors", color: 'from-violet-400 to-purple-600', accent: 'violet' },
   ];
 
   const filteredExperiments = experiments.filter(exp =>
     exp.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleExperimentClick = (experiment) => {
-    alert(`Opening: ${experiment.title}`);
-  };
 
   const initial = studentData.fullName.charAt(0).toUpperCase();
 
@@ -65,7 +59,7 @@ export default function PhysicsTopicsPage() {
       <div className="relative z-10 w-full px-4 sm:px-8 md:px-12 lg:px-16 py-16">
         
         {/* Hero Section */}
-        <div className={`mb-12 transition-all duration-1200 ${animateLoad ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+        <div className={`pt-16 mb-12 transition-all duration-1200 ${animateLoad ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
           <div className="relative">
             {/* Decorative elements */}
             <div className="absolute -top-8 -left-8 w-24 h-24 border-2 border-cyan-500/30 rounded-full opacity-60 animate-pulse"></div>
@@ -111,9 +105,8 @@ export default function PhysicsTopicsPage() {
           animateLoad ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
         }`}>
           {filteredExperiments.map((experiment, idx) => (
-            <div
+            <Link to={`/allexp/${experiment.title}`}
               key={experiment.id}
-              onClick={() => handleExperimentClick(experiment)}
               onMouseEnter={() => setHoveredId(experiment.id)}
               onMouseLeave={() => setHoveredId(null)}
               className="relative group cursor-pointer h-80 perspective transform transition-all duration-500 hover:scale-105"
@@ -163,7 +156,7 @@ export default function PhysicsTopicsPage() {
                   boxShadow: hoveredId === experiment.id ? '0 0 40px 10px rgba(0, 0, 0, 0.3)' : 'none'
                 }}
               ></div>
-            </div>
+            </Link>
           ))}
         </div>
 

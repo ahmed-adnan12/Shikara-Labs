@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function BiologyTopicsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,13 +17,9 @@ export default function BiologyTopicsPage() {
   };
 
   const experiments = [
-    { id: 1, title: "Identification of plant tissues and animal tissues (prepared slides)", color: 'from-cyan-400 to-blue-600', accent: 'cyan' },
-    { id: 2, title: "Temporary mount of leaf peel to show stomata", color: 'from-amber-400 to-orange-600', accent: 'amber' },
-    { id: 3, title: "Study of binary fission and budding (slides/models)", color: 'from-violet-400 to-purple-600', accent: 'violet' },
-    { id: 4, title: "Identification of parts of Heart", color: 'from-pink-400 to-rose-600', accent: 'pink' },
-    { id: 5, title: "Identification of parts of Brain", color: 'from-emerald-400 to-teal-600', accent: 'emerald' },
-    { id: 6, title: "Identification of parts of Flower", color: 'from-red-400 to-red-600', accent: 'red' },
-    { id: 7, title: "Seed germination experiment", color: 'from-lime-400 to-green-600', accent: 'lime' }
+    { id: 1, title: "Iodine Test to Check the Presence of Starch", color: 'from-cyan-400 to-blue-600', accent: 'cyan' },
+    { id: 2, title: "Demonstration That Carbon Dioxide Is Released During Respiration", color: 'from-amber-400 to-orange-600', accent: 'amber' },
+    { id: 4, title: "Study of Photosynthesis", color: 'from-pink-400 to-rose-600', accent: 'pink' },
   ];
 
   const filteredExperiments = experiments.filter(exp =>
@@ -36,7 +33,7 @@ export default function BiologyTopicsPage() {
   const initial = studentData.fullName.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen w-full bg-black text-white overflow-hidden relative">
+    <div className="min-h-screen pt-16 w-full bg-black text-white overflow-hidden relative">
       {/* Dynamic animated background hexagon pattern */}
       <div className="fixed inset-0 pointer-events-none opacity-15">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -112,9 +109,9 @@ export default function BiologyTopicsPage() {
           animateLoad ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
         }`}>
           {filteredExperiments.map((experiment, idx) => (
-            <div
+            <Link
+              to={`/allexp/${experiment.title}`}
               key={experiment.id}
-              onClick={() => handleExperimentClick(experiment)}
               onMouseEnter={() => setHoveredId(experiment.id)}
               onMouseLeave={() => setHoveredId(null)}
               className="relative group cursor-pointer h-80 perspective transform transition-all duration-500 hover:scale-105"
@@ -164,7 +161,7 @@ export default function BiologyTopicsPage() {
                   boxShadow: hoveredId === experiment.id ? '0 0 40px 10px rgba(0, 0, 0, 0.3)' : 'none'
                 }}
               ></div>
-            </div>
+            </Link>
           ))}
         </div>
 

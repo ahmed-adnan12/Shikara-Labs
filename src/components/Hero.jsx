@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Spline from '@splinetool/react-spline';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, X, User } from 'lucide-react';
 
@@ -34,6 +35,7 @@ const slideSlow = {
 };
 
 export default function Hero() {
+  const navigate = useNavigate(); // Add this line
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -90,8 +92,12 @@ export default function Hero() {
       setLoginError('Please fill in all fields');
       return;
     }
+
     if (email === 'adnan' && password === 'adnan123') {
-      alert('Login successful! Welcome Adnan');
+      setShowLoginModal(false);
+
+      // Navigate to dashboard
+      navigate('/dashboard');
     } else {
       setLoginError('Invalid username or password');
     }
@@ -125,10 +131,12 @@ export default function Hero() {
       setSignupError('Password must be at least 6 characters');
       return;
     }
+
     setSignupSuccess('Account created successfully!');
     setTimeout(() => {
       setShowSignupModal(false);
-      setShowLoginModal(true);
+      // Navigate to dashboard after successful signup
+      navigate('/dashboard');
     }, 1500);
   };
 
@@ -486,7 +494,7 @@ export default function Hero() {
             <div
               className="p-4 rounded-lg text-sm mt-6 select-none"
               style={{
-                background: 'rgba(0, 212, 255, 0.1)',
+                background: 'rgba(125, 134, 136, 0.1)',
                 border: '1px solid rgba(0, 212, 255, 0.2)',
               }}
             >

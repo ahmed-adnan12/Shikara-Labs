@@ -19,18 +19,36 @@ export default function ContactSection() {
     });
   };
 
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setSubmitStatus('');
+  
+  try {
+    const response = await fetch('https://formspree.io/f/xojnqdyz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    if (response.ok) {
       setSubmitStatus('success');
       setFormData({ name: '', email: '', phone: '', message: '' });
-      
-      setTimeout(() => setSubmitStatus(''), 3000);
-    }, 1500);
-  };
+      setTimeout(() => setSubmitStatus(''), 5000);
+    } else {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus(''), 5000);
+    }
+  } catch (error) {
+    setSubmitStatus('error');
+    setTimeout(() => setSubmitStatus(''), 5000);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const contactInfo = [
     {
@@ -71,10 +89,10 @@ export default function ContactSection() {
                 backgroundClip: 'text',
                 filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5))',
               }}>
-                Get In Touch
-              </h2>
+               Share Your Feedback
+               </h2>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mt-3 sm:mt-4 font-semibold">
-                Have questions? We'd love to hear from you.
+               Have questions? We'd love to hear from you
               </p>
             </div>
             
@@ -148,10 +166,11 @@ export default function ContactSection() {
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
-                Send us a Message
+              Send Your Feedback
               </h3>
 
-              <div className="space-y-4 sm:space-y-5">
+      
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                 {/* Name Input */}
                 <div className="relative">
                   <label className="block text-xs sm:text-sm font-bold mb-2" style={{
@@ -287,7 +306,7 @@ export default function ContactSection() {
                         e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)';
                         e.currentTarget.style.boxShadow = 'none';
                       }}
-                      placeholder="Tell us how we can help you..."
+                      placeholder="Share your experience, suggestions, or ideas..."
                     />
                   </div>
                 </div>
@@ -321,7 +340,7 @@ export default function ContactSection() {
                         </>
                       ) : (
                         <>
-                          Send Message
+                          Submit Feedback
                           <Send size={18} className="sm:w-5 sm:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
                         </>
                       )}
@@ -339,11 +358,12 @@ export default function ContactSection() {
                     }}
                   >
                     <p className="text-green-400 font-bold text-sm sm:text-base">
-                      ✓ Message sent successfully! We'll get back to you soon.
+                      ✓ Thank you for your feedback! We appreciate your input.
                     </p>
                   </div>
                 )}
-              </div>
+
+             </form>
             </div>
           </div>
         </div>
