@@ -1,29 +1,35 @@
 import { useState, useEffect } from 'react';
+import { Menu, X, ChevronRight, Sparkles } from 'lucide-react';
 
-export default function Header() {
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [logoClicked, setLogoClicked] = useState(false);
+export default function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [scrolled, setScrolled] = useState(false);
+  const [hoveredLink, setHoveredLink] = useState(null);
+
+  const navLinks = [
+    { label: 'Home', id: 'home' },
+    { label: 'Need', id: 'need' },
+    { label: 'Objectives', id: 'objectives' },
+    { label: 'Benefits', id: 'benefits' },
+    { label: 'Contact', id: 'contact' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'need', 'objectives', 'benefits', 'contact'];
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sections[i]);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150) {
-            setActiveSection(sections[i]);
-            break;
-          }
-        }
-      }
+      setScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -31,406 +37,187 @@ export default function Header() {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     setActiveSection(sectionId);
-  };
-
-  const handleLogoClick = () => {
-    setShowWelcome(true);
-    setLogoClicked(true);
-    setTimeout(() => {
-      scrollToSection('home');
-      setShowWelcome(false);
-      setLogoClicked(false);
-    }, 4000);
+    setIsMobileMenuOpen(false);
   };
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 py-6 px-[70px]" style={{ fontFamily: "'Poppins', 'Inter', 'Segoe UI', sans-serif" }}>
-        <div className="flex justify-between items-center w-full gap-16">
-          {/* Logo Section */}
-          <div 
-            className="flex items-center gap-4 group cursor-pointer transition-all duration-300"
-            onClick={handleLogoClick}
-          >
-            <div className="relative w-12 h-12">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-green-400 rounded opacity-75 blur-sm group-hover:opacity-100 transition-opacity duration-300 group-hover:blur-lg"></div>
-              <div className="relative w-full h-full bg-black rounded flex items-center justify-center border border-cyan-500/30 group-hover:border-pink-500/60 transition-colors duration-300">
-                <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 to-green-400 group-hover:from-pink-400 group-hover:to-pink-400 bg-clip-text text-transparent transition-all duration-300">S</span>
-              </div>
-            </div>
-            
-            <span 
-              className="text-4xl font-black transition-all duration-400 group-hover:scale-110 group-hover:-translate-y-2 group-hover:drop-shadow-lg"
-              style={{
-                background: 'linear-gradient(90deg, #00d4ff 0%, #00ff88 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 15px rgba(0, 212, 255, 0.4))',
-                letterSpacing: '1px'
-              }}
+      <nav
+        className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-500 ${
+          scrolled
+            ? 'bg-black/90 backdrop-blur-xl shadow-2xl shadow-cyan-500/10 border-b border-cyan-500/15'
+            : 'bg-transparent border-b border-transparent'
+        }`}
+      >
+        {/* Animated top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60" />
+
+        <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-24">
+          <div className="flex items-center justify-between h-18 sm:h-20">
+            {/* Logo */}
+            <button
+              onClick={() => scrollToSection('home')}
+              className="flex-shrink-0 flex items-center gap-3 group cursor-pointer"
             >
-              SHIKARA LAB
-            </span>
+              <div className="relative">
+                <div className="w-11 h-11 bg-gradient-to-br from-cyan-400 via-cyan-500 to-green-400 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 transition-all duration-300 group-hover:scale-105">
+                  <span className="text-black font-black text-lg tracking-tight">
+                    S
+                  </span>
+                </div>
+                <div className="absolute -inset-1 bg-gradient-to-br from-cyan-400 to-green-400 rounded-xl opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300" />
+              </div>
+              <div className="hidden sm:flex flex-col">
+                <span className="text-xl lg:text-2xl font-black bg-gradient-to-r from-cyan-300 via-cyan-400 to-green-400 bg-clip-text text-transparent tracking-tight leading-tight">
+                  SHIKARA LAB
+                </span>
+                <span className="text-[10px] font-medium text-cyan-500/60 tracking-[0.3em] uppercase -mt-0.5">
+                  Innovation Studio
+                </span>
+              </div>
+            </button>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center">
+              <ul className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.06] rounded-2xl px-2 py-1.5">
+                {navLinks.map((link) => (
+                  <li key={link.id}>
+                    <button
+                      onClick={() => scrollToSection(link.id)}
+                      onMouseEnter={() => setHoveredLink(link.id)}
+                      onMouseLeave={() => setHoveredLink(null)}
+                      className={`relative px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer ${
+                        activeSection === link.id
+                          ? 'text-white'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      {/* Active / Hover background pill */}
+                      {activeSection === link.id && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-green-400/20 rounded-xl border border-cyan-500/20 animate-fade-in" />
+                      )}
+                      {hoveredLink === link.id &&
+                        activeSection !== link.id && (
+                          <span className="absolute inset-0 bg-white/[0.05] rounded-xl transition-opacity duration-200" />
+                        )}
+
+                      <span className="relative z-10 flex items-center gap-1.5">
+                        {link.label}
+                        {activeSection === link.id && (
+                          <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-sm shadow-cyan-400/50 animate-pulse" />
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Desktop CTA */}
+            <div className="hidden md:flex items-center gap-4">
+              <button className="group relative px-7 py-2.5 bg-gradient-to-r from-cyan-500 to-green-400 text-black font-bold text-sm rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/30 active:scale-[0.98] cursor-pointer">
+                <span className="relative z-10 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Get Started
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+                </span>
+                {/* Shine sweep effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden relative w-11 h-11 flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-gray-300 hover:text-white hover:border-cyan-500/30 hover:bg-cyan-500/10 transition-all duration-300 cursor-pointer"
+            >
+              <div
+                className={`transition-all duration-300 ${isMobileMenuOpen ? 'rotate-90 scale-110' : 'rotate-0 scale-100'}`}
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
+              </div>
+            </button>
           </div>
-
-          {/* Nav Links & Button */}
-          <div className="flex items-center gap-8 justify-center flex-1">
-            {/* Nav Links Container */}
-            <ul className="flex gap-8 list-none">
-              <li>
-                <button 
-                  onClick={() => scrollToSection('home')} 
-                  className={`nav-link-item ${activeSection === 'home' ? 'active' : ''}`}
-                >
-                  Home
-                </button>
-              </li>
-
-              <li>
-                <button 
-                  onClick={() => scrollToSection('need')} 
-                  className={`nav-link-item ${activeSection === 'need' ? 'active' : ''}`}
-                >
-                  Need
-                </button>
-              </li>
-
-              <li>
-                <button 
-                  onClick={() => scrollToSection('objectives')} 
-                  className={`nav-link-item ${activeSection === 'objectives' ? 'active' : ''}`}
-                >
-                  Objectives
-                </button>
-              </li>
-
-              <li>
-                <button 
-                  onClick={() => scrollToSection('benefits')} 
-                  className={`nav-link-item ${activeSection === 'benefits' ? 'active' : ''}`}
-                >
-                  Benefits
-                </button>
-              </li>
-
-              <li>
-                <button 
-                  onClick={() => scrollToSection('contact')} 
-                  className={`nav-link-item ${activeSection === 'contact' ? 'active' : ''}`}
-                >
-                  Contact
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Get Started Button */}
-          <button
-            className="px-10 py-3 font-black text-sm rounded-xl transition-all duration-300 cursor-pointer relative overflow-hidden group uppercase tracking-wide"
-            style={{
-              background: 'linear-gradient(135deg, #00d4ff 0%, #00ff88 100%)',
-              boxShadow: '0 8px 25px rgba(0, 212, 255, 0.3)',
-              color: '#000',
-              border: 'none'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 12px 35px rgba(0, 255, 136, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 212, 255, 0.3)';
-            }}
-          >
-            <span className="relative z-10">Get Started</span>
-            <span className="absolute inset-0 bg-white/20 transition-all duration-500 -left-full group-hover:left-full"></span>
-          </button>
         </div>
       </nav>
 
-      {/* Welcome Popup */}
-      {showWelcome && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none overflow-hidden">
-          {/* Animated Background */}
-          <div className="absolute inset-0 bg-black pointer-events-auto" style={{
-            background: `linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(20, 0, 40, 0.98) 50%, rgba(0, 40, 20, 0.95) 100%),
-                        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.25) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.25) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.2) 0%, transparent 50%)`
-          }}>
-            {/* Floating Particles */}
-            <div className="absolute top-20 left-10 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl animate-float-1"></div>
-            <div className="absolute top-40 right-20 w-56 h-56 bg-pink-500/15 rounded-full blur-3xl animate-float-2"></div>
-            <div className="absolute bottom-20 left-1/3 w-48 h-48 bg-green-400/15 rounded-full blur-3xl animate-float-3"></div>
-            <div className="absolute top-1/2 right-1/4 w-36 h-36 bg-blue-500/15 rounded-full blur-3xl animate-float-4"></div>
-            
-            {/* Animated Grid Lines */}
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: `
-                linear-gradient(0deg, transparent 24%, rgba(0, 212, 255, 0.1) 25%, rgba(0, 212, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 212, 255, 0.1) 75%, rgba(0, 212, 255, 0.1) 76%, transparent 77%, transparent),
-                linear-gradient(90deg, transparent 24%, rgba(0, 212, 255, 0.1) 25%, rgba(0, 212, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 212, 255, 0.1) 75%, rgba(0, 212, 255, 0.1) 76%, transparent 77%, transparent)
-              `,
-              backgroundSize: '50px 50px',
-              animation: 'grid-move 20s linear infinite'
-            }}></div>
+      {/* Mobile Overlay */}
+      <div
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${
+          isMobileMenuOpen
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
 
-            {/* Radial Pulse */}
-            <div className="absolute inset-0 animate-pulse-radial" style={{
-              background: 'radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%)'
-            }}></div>
-          </div>
-
-          {/* Content */}
-          <div className="relative text-center">
-            <h1 
-              className="text-6xl md:text-7xl font-black tracking-wider animate-welcome-text"
-              style={{
-                background: 'linear-gradient(90deg, #00d4ff 0%, #ff1493 50%, #00ff88 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 30px rgba(0, 212, 255, 0.6))',
-                letterSpacing: '3px'
-              }}
-            >
-              WELCOME TO
-            </h1>
-            <h2 
-              className="text-7xl md:text-8xl font-black tracking-wider animate-welcome-text-delay"
-              style={{
-                background: 'linear-gradient(90deg, #00ff88 0%, #00d4ff 50%, #ff1493 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 40px rgba(0, 255, 136, 0.8))',
-                letterSpacing: '3px',
-                marginTop: '10px'
-              }}
-            >
-              SHIKARA LAB
-            </h2>
-          </div>
+      {/* Mobile Slide-in Menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-gray-950/95 backdrop-blur-2xl z-50 md:hidden border-l border-cyan-500/10 shadow-2xl shadow-black/50 transition-transform duration-500 ease-out ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Mobile menu header */}
+        <div className="flex items-center justify-between px-6 h-20 border-b border-white/[0.06]">
+          <span className="text-lg font-bold bg-gradient-to-r from-cyan-300 to-green-400 bg-clip-text text-transparent">
+            Menu
+          </span>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-gray-400 hover:text-white transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
-      )}
 
-      <style>{`
-        .nav-link-item {
-          color: #cbd5e1;
-          text-decoration: none;
-          font-size: 18px;
-          font-weight: 700;
-          letter-spacing: 0.5px;
-          padding: 10px 16px;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          position: relative;
-          display: block;
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
+        {/* Mobile nav links */}
+        <div className="px-4 py-6 space-y-1">
+          {navLinks.map((link, index) => (
+            <button
+              key={link.id}
+              onClick={() => scrollToSection(link.id)}
+              className={`w-full flex items-center justify-between px-4 py-4 rounded-xl font-semibold text-base transition-all duration-300 cursor-pointer group ${
+                activeSection === link.id
+                  ? 'bg-gradient-to-r from-cyan-500/15 to-green-400/10 text-white border border-cyan-500/20'
+                  : 'text-gray-400 hover:bg-white/[0.04] hover:text-white border border-transparent'
+              }`}
+              style={{
+                transitionDelay: isMobileMenuOpen ? `${index * 60}ms` : '0ms',
+              }}
+            >
+              <span className="flex items-center gap-3">
+                {activeSection === link.id && (
+                  <span className="w-2 h-2 bg-cyan-400 rounded-full shadow-sm shadow-cyan-400/50" />
+                )}
+                {link.label}
+              </span>
+              <ChevronRight
+                className={`w-4 h-4 transition-all duration-200 ${
+                  activeSection === link.id
+                    ? 'text-cyan-400 opacity-100'
+                    : 'opacity-0 group-hover:opacity-50 -translate-x-1 group-hover:translate-x-0'
+                }`}
+              />
+            </button>
+          ))}
+        </div>
 
-        .nav-link-item::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 16px;
-          right: 16px;
-          height: 2px;
-          background: linear-gradient(90deg, #ff1493, #ff69b4);
-          transform: scaleX(0);
-          transform-origin: right;
-          transition: transform 0.3s ease;
-        }
-
-        .nav-link-item:hover {
-          color: #ff1493;
-          background: rgba(255, 20, 147, 0.08);
-          transform: translateY(-2px);
-        }
-
-        .nav-link-item:hover::after {
-          transform: scaleX(1);
-          transform-origin: left;
-        }
-
-        .nav-link-item.active {
-          color: #ff1493;
-          font-size: 20px;
-          font-weight: 900;
-          transform: scale(1.1);
-        }
-
-        .nav-link-item.active::after {
-          transform: scaleX(1);
-          transform-origin: left;
-        }
-
-        @keyframes welcome-slow-motion {
-          0% {
-            opacity: 0;
-            transform: scale(0.5) translateY(20px);
-            filter: blur(10px);
-          }
-          30% {
-            opacity: 1;
-            transform: scale(1.05) translateY(-5px);
-            filter: blur(0px);
-          }
-          60% {
-            opacity: 1;
-            transform: scale(1) translateY(0px);
-            filter: blur(0px);
-          }
-          70% {
-            opacity: 1;
-            transform: scale(1) translateY(0px);
-            filter: blur(0px);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1.2) translateY(-30px);
-            filter: blur(15px);
-          }
-        }
-
-        @keyframes welcome-slow-motion-delay {
-          0% {
-            opacity: 0;
-            transform: scale(0.3) translateY(40px);
-            filter: blur(15px);
-          }
-          40% {
-            opacity: 0;
-            transform: scale(0.3) translateY(40px);
-            filter: blur(15px);
-          }
-          70% {
-            opacity: 1;
-            transform: scale(1.05) translateY(-5px);
-            filter: blur(0px);
-          }
-          85% {
-            opacity: 1;
-            transform: scale(1) translateY(0px);
-            filter: blur(0px);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1.3) translateY(-40px);
-            filter: blur(20px);
-          }
-        }
-
-        .animate-welcome-text {
-          animation: welcome-slow-motion 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        .animate-welcome-text-delay {
-          animation: welcome-slow-motion-delay 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        @keyframes float-1 {
-          0%, 100% {
-            transform: translate(0, 0);
-            opacity: 0.3;
-          }
-          25% {
-            transform: translate(30px, -30px);
-            opacity: 0.5;
-          }
-          50% {
-            transform: translate(-20px, 20px);
-            opacity: 0.3;
-          }
-          75% {
-            transform: translate(40px, 10px);
-            opacity: 0.4;
-          }
-        }
-
-        @keyframes float-2 {
-          0%, 100% {
-            transform: translate(0, 0);
-            opacity: 0.2;
-          }
-          33% {
-            transform: translate(-40px, 30px);
-            opacity: 0.4;
-          }
-          66% {
-            transform: translate(20px, -25px);
-            opacity: 0.3;
-          }
-        }
-
-        @keyframes float-3 {
-          0%, 100% {
-            transform: translate(0, 0);
-            opacity: 0.25;
-          }
-          40% {
-            transform: translate(35px, -20px);
-            opacity: 0.45;
-          }
-          80% {
-            transform: translate(-30px, 25px);
-            opacity: 0.2;
-          }
-        }
-
-        @keyframes float-4 {
-          0%, 100% {
-            transform: translate(0, 0);
-            opacity: 0.2;
-          }
-          50% {
-            transform: translate(-25px, -35px);
-            opacity: 0.4;
-          }
-        }
-
-        @keyframes grid-move {
-          0% {
-            transform: translateY(0);
-          }
-          100% {
-            transform: translateY(50px);
-          }
-        }
-
-        @keyframes pulse-radial {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: scale(1.1);
-            opacity: 0.6;
-          }
-        }
-
-        .animate-float-1 {
-          animation: float-1 8s ease-in-out infinite;
-        }
-
-        .animate-float-2 {
-          animation: float-2 10s ease-in-out infinite;
-        }
-
-        .animate-float-3 {
-          animation: float-3 12s ease-in-out infinite;
-        }
-
-        .animate-float-4 {
-          animation: float-4 9s ease-in-out infinite;
-        }
-
-        .animate-pulse-radial {
-          animation: pulse-radial 4s ease-in-out infinite;
-        }
-      `}</style>
+        {/* Mobile CTA */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/[0.06]">
+          <button className="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-green-400 text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 active:scale-[0.98] cursor-pointer">
+            <Sparkles className="w-4 h-4" />
+            Get Started
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          <p className="text-center text-xs text-gray-600 mt-3">
+            No credit card required
+          </p>
+        </div>
+      </div>
     </>
   );
 }
